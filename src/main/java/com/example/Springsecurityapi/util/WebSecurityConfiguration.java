@@ -3,6 +3,7 @@ package com.example.Springsecurityapi.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +19,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Bean
+    public BCryptPasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
     AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider =  new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
@@ -27,8 +32,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable().authorizeRequests()
                 .antMatchers("/")
+                .permitAll()
+                .antMatchers(HttpMethod.POST,"/registration")
                 .permitAll()
                 .antMatchers("/user")
                 .hasAuthority("user")
