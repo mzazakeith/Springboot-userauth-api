@@ -19,5 +19,4 @@ public class UserRegistrationController {
     public ResponseEntity<User> saveUser(@RequestBody UserRegistrationDto userregistrationDto){
         return new ResponseEntity<User>(userService.saveUser(userregistrationDto),HttpStatus.CREATED);
     }
-
 }
